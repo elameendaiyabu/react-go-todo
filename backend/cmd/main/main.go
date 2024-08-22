@@ -1,6 +1,7 @@
 package main
 
 import (
+	"backend/pkg/config"
 	"backend/pkg/routes"
 	"fmt"
 	"log"
@@ -10,6 +11,7 @@ import (
 )
 
 func main() {
+	config.Connect()
 	r := mux.NewRouter()
 
 	routes.TodoRoutes(r)

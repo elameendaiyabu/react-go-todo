@@ -7,8 +7,8 @@ import (
 )
 
 var TodoRoutes = func(r *mux.Router) {
-	r.HandleFunc("/", controllers.GetTodos).Methods("GET")
-	r.HandleFunc("/", controllers.CreateTodo).Methods("POST")
-	r.HandleFunc("/{id}", controllers.UpdateTodo).Methods("PUT")
-	r.HandleFunc("/{id}", controllers.DeleteTodo).Methods("DELETE")
+	r.HandleFunc("/", controllers.GetTasks).Methods("GET")
+	r.HandleFunc("/", controllers.CreateTask).Methods("POST")
+	r.HandleFunc("/{id}", controllers.UpdateTask).Methods("PUT")
+	r.HandleFunc("/{id}", controllers.DeleteTask).Methods("DELETE")
 }

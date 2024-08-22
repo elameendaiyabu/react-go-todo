@@ -11,6 +11,7 @@ function App() {
       <form className=" flex justify-center h-10 items-center">
         <input
           type="text"
+          name="task"
           placeholder="Add task ..."
           className="w-96 h-full border-black pl-2 border-2"
         />

@@ -5,18 +5,18 @@ import (
 	"net/http"
 )
 
-func GetTodos(w http.ResponseWriter, r *http.Request) {
+func GetTasks(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Getting todos \n")
 }
 
-func CreateTodo(w http.ResponseWriter, r *http.Request) {
+func CreateTask(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Creating Todo \n")
 }
 
-func UpdateTodo(w http.ResponseWriter, r *http.Request) {
+func UpdateTask(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Updating Todo \n")
 }
 
-func DeleteTodo(w http.ResponseWriter, r *http.Request) {
+func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Deleting todo \n")
 }

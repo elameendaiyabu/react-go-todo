@@ -1,6 +1,9 @@
 import { CircleCheckBig, Trash2, Undo } from "lucide-react";
+import { useState } from "react";
+import { createTask } from "./api/taskApi";
 
 function App() {
+  const [task, setTask] = useState("");
   const todo = ["wash plates", "clean room", "eat potatoes", "call zuzu"];
 
   const done = ["buy car", "enter house"];
@@ -8,10 +11,21 @@ function App() {
   return (
     <div className=" bg-neutral-50 flex flex-col gap-8 items-center p-10 min-h-screen w-full">
       <h1 className="text-2xl lg:text-5xl font-bold">TO-DO APP</h1>
-      <form className=" flex justify-center h-10 items-center">
+      <form
+        autoComplete="off"
+        onSubmit={(e) => {
+          createTask(e, task);
+          setTask("");
+        }}
+        className=" flex justify-center h-10 items-center"
+      >
         <input
+          onChange={(e) => {
+            setTask(e.target.value);
+          }}
           type="text"
           name="task"
+          value={task}
           placeholder="Add task ..."
           className="w-96 h-full border-black pl-2 border-2"
         />

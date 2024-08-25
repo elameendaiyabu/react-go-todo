@@ -27,8 +27,6 @@ func Connect() {
 		log.Fatal(err)
 	}
 
-	defer d.Close()
-
 	if err := d.Ping(); err != nil {
 		log.Fatal(err)
 	}

@@ -29,3 +29,16 @@ export async function getTasks() {
     console.log(e);
   }
 }
+
+export async function deleteTask(id: number) {
+  axios
+    .delete(`http://localhost:8080/${id}`)
+    .then((response) => {
+      console.log(response.data.message);
+      // Handle successful deletion (e.g., update state)
+    })
+    .catch((error) => {
+      console.error("Error deleting task:", error);
+      // Handle error
+    });
+}

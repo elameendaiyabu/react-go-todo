@@ -21,10 +21,10 @@ type task struct {
 func GetTasks(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Getting todos \n")
 
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.Header().Set("Context-Type", "application/json")
 
 	db = config.GetDB()
 
@@ -58,10 +58,10 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 func CreateTask(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Creating Todo \n")
 
-	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.Header().Set("Content-Type", "application/json")
 
 	now := time.Now()
 
@@ -102,6 +102,8 @@ func UpdateTask(w http.ResponseWriter, r *http.Request) {
 func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Deleting todo \n")
 
+	w.Header().Set("Content-Type", "application/json")
+
 	db = config.GetDB()
 	vars := mux.Vars(r)
 	id := vars["id"]
@@ -112,4 +114,6 @@ func DeleteTask(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"message": "Task deleted successfully"})
 }

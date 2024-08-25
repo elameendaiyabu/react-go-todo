@@ -1,6 +1,6 @@
 import { CircleCheckBig, Trash2, Undo } from "lucide-react";
 import { useEffect, useState } from "react";
-import { createTask, getTasks } from "./api/taskApi";
+import { createTask, deleteTask, getTasks } from "./api/taskApi";
 
 type Todo = {
   id: number;
@@ -19,7 +19,6 @@ function App() {
     async function getTodo() {
       try {
         tasks = await getTasks();
-        console.log(tasks);
         setTodo(tasks);
       } catch (e) {
         console.log(e);
@@ -61,7 +60,7 @@ function App() {
         <div>
           <h2 className=" text-xl lg:text-3xl font-bold">To-Do List</h2>
           <ul className=" flex flex-col border-b-black border-2 overflow-auto h-80">
-            {todo.map((item: Todo, index: number) => (
+            {todo?.map((item: Todo, index: number) => (
               <div className=" flex justify-center items-center gap-4">
                 <li
                   key={index}
@@ -72,7 +71,13 @@ function App() {
                 <button className=" hover:bg-neutral-100 p-3">
                   <CircleCheckBig />
                 </button>
-                <button className="hover:bg-neutral-100 p-3">
+                <button
+                  onClick={() => {
+                    deleteTask(item.id);
+                    setState(!state);
+                  }}
+                  className="hover:bg-neutral-100 p-3"
+                >
                   <Trash2 />
                 </button>
               </div>

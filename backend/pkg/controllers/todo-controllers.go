@@ -21,6 +21,11 @@ type task struct {
 func GetTasks(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Getting todos \n")
 
+	w.Header().Set("Context-Type", "application/x-www-form-urlencoded")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 	db = config.GetDB()
 
 	sqlStatement := `SELECT id, task FROM tasks`
@@ -47,7 +52,6 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 	res, _ := json.Marshal(tasks)
 	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(tasks)
 	w.Write(res)
 }
 

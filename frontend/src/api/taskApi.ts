@@ -31,7 +31,7 @@ export async function getTasks() {
 }
 
 export async function deleteTask(id: number) {
-  axios
+  await axios
     .delete(`http://localhost:8080/${id}`)
     .then((response) => {
       console.log(response.data.message);
@@ -40,5 +40,16 @@ export async function deleteTask(id: number) {
     .catch((error) => {
       console.error("Error deleting task:", error);
       // Handle error
+    });
+}
+
+export async function updateTaskStatus(currentStatus: string, id: number) {
+  await axios
+    .put(`http://localhost:8080/${currentStatus}/${id}`)
+    .then((response) => {
+      console.log(response.data.message);
+    })
+    .catch((e) => {
+      console.log(e);
     });
 }

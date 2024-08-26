@@ -14,21 +14,19 @@ import (
 var db *sql.DB
 
 type task struct {
-	Id   int    `json:"id"`
-	Task string `json:"task"`
+	Id     int    `json:"id"`
+	Task   string `json:"task"`
+	Status string `json:"status"`
 }
 
 func GetTasks(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Getting todos \n")
 
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Context-Type", "application/json")
 
 	db = config.GetDB()
 
-	sqlStatement := `SELECT id, task FROM tasks`
+	sqlStatement := `SELECT id, task, status FROM tasks`
 	rows, err := db.Query(sqlStatement)
 	if err != nil {
 		panic(err)
@@ -38,7 +36,7 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 	var tasks []task
 	for rows.Next() {
 		var t task
-		err := rows.Scan(&t.Id, &t.Task)
+		err := rows.Scan(&t.Id, &t.Task, &t.Status)
 		if err != nil {
 			panic(err)
 		}
@@ -58,9 +56,6 @@ func GetTasks(w http.ResponseWriter, r *http.Request) {
 func CreateTask(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Creating Todo \n")
 
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "POST")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	w.Header().Set("Content-Type", "application/json")
 
 	now := time.Now()
@@ -73,20 +68,56 @@ func CreateTask(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewDecoder(r.Body).Decode(&task)
 	db = config.GetDB()
 
-	sqlStatement := `INSERT INTO tasks ( task, created_at)
-	VALUES ($1, $2) `
+	sqlStatement := `INSERT INTO tasks ( task, created_at, status)
+	VALUES ($1, $2, $3) `
 
-	_, err := db.Exec(sqlStatement, task, now.Format("Mon Jan 2 15:04:05 MST 2006"))
+	_, err := db.Exec(sqlStatement, task, now.Format("Mon Jan 2 15:04:05 MST 2006"), "todo")
 	if err != nil {
 		panic(err)
 	}
 	json.NewEncoder(w).Encode(task)
 }
 
+func UpdateTaskStatus(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("Updating Status \n")
+
+	w.Header().Set("Content-Type", "application/json")
+	db = config.GetDB()
+
+	vars := mux.Vars(r)
+	id := vars["id"]
+	currentStatus := vars["currentStatus"]
+	if currentStatus == "todo" {
+
+		sqlStatement := ` UPDATE tasks SET status = $1 WHERE id = $2`
+
+		_, err := db.Exec(sqlStatement, "done", id)
+		fmt.Printf("changed to done \n")
+		if err != nil {
+			panic(err)
+		}
+	} else if currentStatus == "done" {
+
+		sqlStatement := ` UPDATE tasks SET status = $1 WHERE id = $2`
+
+		_, err := db.Exec(sqlStatement, "todo", id)
+		fmt.Printf("changed to todo \n")
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{"message": "Task status updated successfully"})
+}
+
 func UpdateTask(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Updating Todo \n")
 
 	db = config.GetDB()
+
 	vars := mux.Vars(r)
 	id := vars["id"]
 	task := "go to the mart"
